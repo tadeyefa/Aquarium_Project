@@ -14,8 +14,13 @@ public class Cactus {
         ypos = pYpos;
         dx = pDx;
         dy = pDy;
-        width = 60;
-        height = 60;
+        width = 175;
+        height = 50;
         isAlive = true;
+    }
+
+    public void move() {
+        xpos = xpos + dx;
+        ypos = ypos + dy;
     }
 }

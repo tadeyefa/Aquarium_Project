@@ -39,13 +39,15 @@ public class BasicGameApp implements Runnable {
 
     public BufferStrategy bufferStrategy;
     public Image sun;
-    public Image cactus;
+    public Image cactusPic;
     public Image basketballPic;
     public Image background;
+    public Image coyotePic;
 
     //Declare the objects used in the program
     //These are things that are made up of more than one variable type
-
+    private Cactus cacti;
+    private Cactus coyote;
 
     // Main method definition
     // This is the code that runs first and automatically
@@ -66,9 +68,12 @@ public class BasicGameApp implements Runnable {
         //variable and objects
         //create (construct) the objects needed for the game and load up
         sun = Toolkit.getDefaultToolkit().getImage("sun.png"); //load the picture
-        cactus = Toolkit.getDefaultToolkit().getImage("cactus.jpeg");
+        cactusPic = Toolkit.getDefaultToolkit().getImage("cactus.jpeg");
         basketballPic = Toolkit.getDefaultToolkit().getImage("basketball.jpg");
         background = Toolkit.getDefaultToolkit().getImage("sahara-desert.jpg");
+        coyotePic = Toolkit.getDefaultToolkit().getImage("coyote.jpeg");
+        cacti = new Cactus(25, 550, 2, 4);
+        coyote = new Cactus(300, 350, 1, 3);
     }// BasicGameApp()
 
 
@@ -103,6 +108,7 @@ public class BasicGameApp implements Runnable {
     public void moveThings()
     {
         //calls the move( ) code in the objects
+        coyote.move();
         increase();
         crash();
     }
@@ -156,15 +162,13 @@ public class BasicGameApp implements Runnable {
         //draw the image of the astronaut
         g.drawImage(background, 0, 0, WIDTH,HEIGHT, null);
         g.drawImage(sun, 940, 0, 60,60, null);
-        g.drawImage(cactus, 0, 550, 75,150, null);
-//        g.drawImage(astroPic, astro.xpos, astro.ypos, astro.width, astro.height, null);
-//        g.drawImage(astro2Pic, astro2.xpos, astro2.ypos, astro2.width, astro2.height, null);
-//        g.drawImage(basketballPic, basketball.xpos, basketball.ypos, basketball.width, basketball.height, null);
-//        if(astro.isAlive == true) {
-//            g.draw(new Rectangle(astro.xpos, astro.ypos, astro.width, astro.height));
-//        }
-//        g.draw(new Rectangle(astro2.xpos, astro2.ypos, astro2.width, astro2.height));
-//        g.draw(new Rectangle(basketball.xpos, basketball.ypos, basketball.width, basketball.height));
+        g.drawImage(cactusPic, 25, 550, 75,150, null);
+        g.drawImage(cactusPic, 200, 550, 75, 150, null);
+        g.drawImage(cactusPic, 375, 550, 75, 150, null);
+        g.drawImage(cactusPic, 550, 550, 75, 150, null);
+        g.drawImage(cactusPic, 725, 550, 75, 150, null);
+        g.drawImage(cactusPic, 900, 550, 75, 150, null);
+        g.drawImage(coyotePic, coyote.xpos, coyote.ypos, coyote.width, coyote.height, null);
         g.dispose();
 
         bufferStrategy.show();
