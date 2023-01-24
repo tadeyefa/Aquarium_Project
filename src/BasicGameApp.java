@@ -12,6 +12,8 @@
 //import java.awt.Canvas;
 
 //Graphics Libraries
+import sun.lwawt.macosx.CPrinterGraphics;
+
 import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 import java.awt.*;
@@ -43,11 +45,18 @@ public class BasicGameApp implements Runnable {
     public Image basketballPic;
     public Image background;
     public Image coyotePic;
+    public Image cottontailPic;
 
     //Declare the objects used in the program
     //These are things that are made up of more than one variable type
     private Cactus cacti;
+    private Cactus cacti2;
+    private Cactus cacti3;
+    private Cactus cacti4;
+    private Cactus cacti5;
+    private Cactus cacti6;
     private Cactus coyote;
+    private Cactus cottontail;
 
     // Main method definition
     // This is the code that runs first and automatically
@@ -72,8 +81,15 @@ public class BasicGameApp implements Runnable {
         basketballPic = Toolkit.getDefaultToolkit().getImage("basketball.jpg");
         background = Toolkit.getDefaultToolkit().getImage("sahara-desert.jpg");
         coyotePic = Toolkit.getDefaultToolkit().getImage("coyote.jpeg");
+        cottontailPic = Toolkit.getDefaultToolkit().getImage("cottontail.jpeg");
         cacti = new Cactus(25, 550, 2, 4);
+        cacti2 = new Cactus(25, 550, 2, 4);
+        cacti3 = new Cactus(25, 550, 2, 4);
+        cacti4 = new Cactus(25, 550, 2, 4);
+        cacti5 = new Cactus(25, 550, 2, 4);
+        cacti6 = new Cactus(25, 550, 2, 4);
         coyote = new Cactus(300, 350, 1, 3);
+        cottontail = new Cactus(200, 150, 2, 2);
     }// BasicGameApp()
 
 
@@ -95,22 +111,29 @@ public class BasicGameApp implements Runnable {
         }
     }
 
-    public void crash()
+//    public void prey()
+//    {
+//        if (cottontail.rec.intersects(coyote.rec)) {
+//            cottontail.isAlive = false;
+//        }
+//    }
+
+    public void reproduce()
     {
-
-    }
-
-    public void increase()
-    {
-
+        if (cottontail.rec.intersects(cacti.rec)) {
+            CPrinterGraphics g = null;
+            g.draw(new Rectangle(cottontail.xpos, cottontail.ypos, cottontail.width, cottontail.height));
+            g.drawImage(cottontailPic, cottontail.xpos, cottontail.ypos, cottontail.width, cottontail.height, null);
+        }
     }
 
     public void moveThings()
     {
         //calls the move( ) code in the objects
-        coyote.move();
-        increase();
-        crash();
+        coyote.bounce();
+        cottontail.bounce();
+//        prey();
+        reproduce();
     }
 
     //Pauses or sleeps the computer for the amount specified in milliseconds
@@ -162,13 +185,19 @@ public class BasicGameApp implements Runnable {
         //draw the image of the astronaut
         g.drawImage(background, 0, 0, WIDTH,HEIGHT, null);
         g.drawImage(sun, 940, 0, 60,60, null);
+        g.draw(new Rectangle(cacti.xpos, cacti.ypos, 75, 150));
         g.drawImage(cactusPic, 25, 550, 75,150, null);
         g.drawImage(cactusPic, 200, 550, 75, 150, null);
         g.drawImage(cactusPic, 375, 550, 75, 150, null);
         g.drawImage(cactusPic, 550, 550, 75, 150, null);
         g.drawImage(cactusPic, 725, 550, 75, 150, null);
         g.drawImage(cactusPic, 900, 550, 75, 150, null);
-        g.drawImage(coyotePic, coyote.xpos, coyote.ypos, coyote.width, coyote.height, null);
+        g.draw(new Rectangle(coyote.xpos, coyote.ypos, 100, 50));
+        g.drawImage(coyotePic, coyote.xpos, coyote.ypos, 100, 50, null);
+        if (cottontail.isAlive == true) {
+            g.draw(new Rectangle(cottontail.xpos, cottontail.ypos, cottontail.width, cottontail.height));
+            g.drawImage(cottontailPic, cottontail.xpos, cottontail.ypos, cottontail.width, cottontail.height, null);
+        }
         g.dispose();
 
         bufferStrategy.show();
