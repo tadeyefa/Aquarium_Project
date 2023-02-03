@@ -46,6 +46,7 @@ public class BasicGameApp implements Runnable {
     public Image background;
     public Image coyotePic;
     public Image cottontailPic;
+    public Image vulturePic;
 
     //Declare the objects used in the program
     //These are things that are made up of more than one variable type
@@ -57,6 +58,7 @@ public class BasicGameApp implements Runnable {
     private Cactus cacti6;
     private Cactus coyote;
     private Cactus cottontail;
+    private Cactus vulture;
 
     // Main method definition
     // This is the code that runs first and automatically
@@ -82,14 +84,16 @@ public class BasicGameApp implements Runnable {
         background = Toolkit.getDefaultToolkit().getImage("sahara-desert.jpg");
         coyotePic = Toolkit.getDefaultToolkit().getImage("coyote.jpeg");
         cottontailPic = Toolkit.getDefaultToolkit().getImage("cottontail.jpeg");
+        vulturePic = Toolkit.getDefaultToolkit().getImage("vulture.png");
         cacti = new Cactus(25, 550, 2, 4);
-        cacti2 = new Cactus(25, 550, 2, 4);
-        cacti3 = new Cactus(25, 550, 2, 4);
-        cacti4 = new Cactus(25, 550, 2, 4);
-        cacti5 = new Cactus(25, 550, 2, 4);
-        cacti6 = new Cactus(25, 550, 2, 4);
-        coyote = new Cactus(300, 350, 1, 3);
-        cottontail = new Cactus(200, 150, 2, 2);
+        cacti2 = new Cactus(200, 550, 2, 4);
+        cacti3 = new Cactus(375, 550, 2, 4);
+        cacti4 = new Cactus(550, 550, 2, 4);
+        cacti5 = new Cactus(725, 550, 2, 4);
+        cacti6 = new Cactus(900, 550, 2, 4);
+        coyote = new Cactus(300, 350, 1, 4);
+        cottontail = new Cactus(200, 150, 3, 2);
+        vulture = new Cactus(25, 25, 1, 0);
     }// BasicGameApp()
 
 
@@ -111,29 +115,29 @@ public class BasicGameApp implements Runnable {
         }
     }
 
-//    public void prey()
-//    {
-//        if (cottontail.rec.intersects(coyote.rec)) {
-//            cottontail.isAlive = false;
-//        }
-//    }
-
-    public void reproduce()
+    public void prey()
     {
-        if (cottontail.rec.intersects(cacti.rec)) {
-            CPrinterGraphics g = null;
-            g.draw(new Rectangle(cottontail.xpos, cottontail.ypos, cottontail.width, cottontail.height));
-            g.drawImage(cottontailPic, cottontail.xpos, cottontail.ypos, cottontail.width, cottontail.height, null);
+        if (cottontail.rec.intersects(coyote.rec)) {
+            cottontail.isAlive = false;
         }
     }
+
+//    public void reproduce()
+//    {
+//        if (cottontail.rec.intersects(cacti.rec)) {
+//            CPrinterGraphics g = null;
+//            g.draw(new Rectangle(cottontail.xpos, cottontail.ypos, cottontail.width, cottontail.height));
+//            g.drawImage(cottontailPic, cottontail.xpos, cottontail.ypos, cottontail.width, cottontail.height, null);
+//        }
+//    }
 
     public void moveThings()
     {
         //calls the move( ) code in the objects
         coyote.bounce();
         cottontail.bounce();
-//        prey();
-        reproduce();
+        prey();
+//        reproduce();
     }
 
     //Pauses or sleeps the computer for the amount specified in milliseconds
@@ -187,10 +191,15 @@ public class BasicGameApp implements Runnable {
         g.drawImage(sun, 940, 0, 60,60, null);
         g.draw(new Rectangle(cacti.xpos, cacti.ypos, 75, 150));
         g.drawImage(cactusPic, 25, 550, 75,150, null);
+        g.draw(new Rectangle(cacti2.xpos, cacti2.ypos, 75, 150));
         g.drawImage(cactusPic, 200, 550, 75, 150, null);
+        g.draw(new Rectangle(cacti3.xpos, cacti2.ypos, 75, 150));
         g.drawImage(cactusPic, 375, 550, 75, 150, null);
+        g.draw(new Rectangle(cacti4.xpos, cacti2.ypos, 75, 150));
         g.drawImage(cactusPic, 550, 550, 75, 150, null);
+        g.draw(new Rectangle(cacti5.xpos, cacti2.ypos, 75, 150));
         g.drawImage(cactusPic, 725, 550, 75, 150, null);
+        g.draw(new Rectangle(cacti6.xpos, cacti2.ypos, 75, 150));
         g.drawImage(cactusPic, 900, 550, 75, 150, null);
         g.draw(new Rectangle(coyote.xpos, coyote.ypos, 100, 50));
         g.drawImage(coyotePic, coyote.xpos, coyote.ypos, 100, 50, null);
