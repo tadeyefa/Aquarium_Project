@@ -47,6 +47,9 @@ public class BasicGameApp implements Runnable {
     public Image coyotePic;
     public Image cottontailPic;
     public Image vulturePic;
+    public Image won_screen;
+
+    public boolean winning = false;
 
     //Declare the objects used in the program
     //These are things that are made up of more than one variable type
@@ -58,6 +61,9 @@ public class BasicGameApp implements Runnable {
     private Cactus cacti6;
     private Cactus coyote;
     private Cactus cottontail;
+    private Cactus cottontail2;
+    private Cactus cottontail3;
+    private Cactus cottontail4;
     private Cactus vulture;
 
     // Main method definition
@@ -92,8 +98,12 @@ public class BasicGameApp implements Runnable {
         cacti5 = new Cactus(725, 550, 2, 4);
         cacti6 = new Cactus(900, 550, 2, 4);
         coyote = new Cactus(300, 350, 1, 4);
-        cottontail = new Cactus(200, 150, 3, 2);
+        cottontail = new Cactus(50, 150, 3, 2);
+        cottontail2 = new Cactus(175, 150, 2, 3);
+        cottontail3 = new Cactus(300, 150, 4, 2);
+        cottontail4 = new Cactus(425, 150, 2, 5);
         vulture = new Cactus(25, 25, 1, 0);
+        won_screen = Toolkit.getDefaultToolkit().getImage("game_won.jpeg");
     }// BasicGameApp()
 
 
@@ -120,24 +130,33 @@ public class BasicGameApp implements Runnable {
         if (cottontail.rec.intersects(coyote.rec)) {
             cottontail.isAlive = false;
         }
+        if (cottontail2.rec.intersects(coyote.rec)) {
+            cottontail2.isAlive = false;
+        }
+        if (cottontail3.rec.intersects(coyote.rec)) {
+            cottontail3.isAlive = false;
+        }
+        if (cottontail4.rec.intersects(coyote.rec)) {
+            cottontail4.isAlive = false;
+        }
     }
-
-//    public void reproduce()
-//    {
-//        if (cottontail.rec.intersects(cacti.rec)) {
-//            CPrinterGraphics g = null;
-//            g.draw(new Rectangle(cottontail.xpos, cottontail.ypos, cottontail.width, cottontail.height));
-//            g.drawImage(cottontailPic, cottontail.xpos, cottontail.ypos, cottontail.width, cottontail.height, null);
-//        }
-//    }
 
     public void moveThings()
     {
         //calls the move( ) code in the objects
         coyote.bounce();
         cottontail.bounce();
+        cottontail2.bounce();
+        cottontail3.bounce();
+        cottontail4.bounce();
+        vulture.wrap();
         prey();
-//        reproduce();
+        checkWin();
+    }
+    public void checkWin(){
+        if(cottontail.isAlive == false && cottontail2.isAlive == false && cottontail3.isAlive == false && cottontail4.isAlive == false){
+            winning = true;
+        }
     }
 
     //Pauses or sleeps the computer for the amount specified in milliseconds
@@ -184,13 +203,14 @@ public class BasicGameApp implements Runnable {
     //paints things on the screen using bufferStrategy
     private void render() {
         Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
+        if(winning == false){
         g.clearRect(0, 0, WIDTH, HEIGHT);
 
         //draw the image of the astronaut
-        g.drawImage(background, 0, 0, WIDTH,HEIGHT, null);
-        g.drawImage(sun, 940, 0, 60,60, null);
+        g.drawImage(background, 0, 0, WIDTH, HEIGHT, null);
+        g.drawImage(sun, 940, 0, 60, 60, null);
         g.draw(new Rectangle(cacti.xpos, cacti.ypos, 75, 150));
-        g.drawImage(cactusPic, 25, 550, 75,150, null);
+        g.drawImage(cactusPic, 25, 550, 75, 150, null);
         g.draw(new Rectangle(cacti2.xpos, cacti2.ypos, 75, 150));
         g.drawImage(cactusPic, 200, 550, 75, 150, null);
         g.draw(new Rectangle(cacti3.xpos, cacti2.ypos, 75, 150));
@@ -206,6 +226,24 @@ public class BasicGameApp implements Runnable {
         if (cottontail.isAlive == true) {
             g.draw(new Rectangle(cottontail.xpos, cottontail.ypos, cottontail.width, cottontail.height));
             g.drawImage(cottontailPic, cottontail.xpos, cottontail.ypos, cottontail.width, cottontail.height, null);
+        }
+        if (cottontail2.isAlive == true) {
+            g.draw(new Rectangle(cottontail2.xpos, cottontail2.ypos, cottontail2.width, cottontail2.height));
+            g.drawImage(cottontailPic, cottontail2.xpos, cottontail2.ypos, cottontail2.width, cottontail2.height, null);
+        }
+        if (cottontail3.isAlive == true) {
+            g.draw(new Rectangle(cottontail3.xpos, cottontail3.ypos, cottontail3.width, cottontail3.height));
+            g.drawImage(cottontailPic, cottontail3.xpos, cottontail3.ypos, cottontail3.width, cottontail3.height, null);
+        }
+        if (cottontail4.isAlive == true) {
+            g.draw(new Rectangle(cottontail4.xpos, cottontail4.ypos, cottontail4.width, cottontail4.height));
+            g.drawImage(cottontailPic, cottontail4.xpos, cottontail4.ypos, cottontail4.width, cottontail4.height, null);
+        }
+        g.draw(new Rectangle(vulture.xpos, vulture.ypos, 75, 150));
+        g.drawImage(vulturePic, vulture.xpos, 25, 75, 150, null);
+    }
+        else{
+            g.drawImage(won_screen, 0, 0, WIDTH, HEIGHT, null);
         }
         g.dispose();
 

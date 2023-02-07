@@ -45,4 +45,16 @@ public class Cactus {
         ypos = ypos + dy;
         rec = new Rectangle(xpos, ypos, height, width);
     }
+
+    public void wrap() {
+        if (xpos > 1000) {
+            xpos = 0;
+        }
+        if (ypos > 700) {
+            ypos = 0;
+        }
+        xpos = xpos + dx;
+        ypos = ypos + dy;
+        rec = new Rectangle(xpos, ypos, height, width);
+    }
 }
