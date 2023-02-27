@@ -15,6 +15,7 @@
 import sun.lwawt.macosx.CPrinterGraphics;
 
 import java.awt.Graphics2D;
+import java.awt.event.*;
 import java.awt.image.BufferStrategy;
 import java.awt.*;
 import javax.swing.JFrame;
@@ -24,7 +25,7 @@ import javax.swing.JPanel;
 //*******************************************************************************
 // Class Definition Section
 
-public class BasicGameApp implements Runnable {
+public class BasicGameApp implements Runnable, KeyListener, MouseListener, MouseMotionListener {
 
     //Variable Definition Section
     //Declare the variables used in the program
@@ -60,11 +61,8 @@ public class BasicGameApp implements Runnable {
     private Cactus cacti5;
     private Cactus cacti6;
     private Cactus coyote;
-    private Cactus cottontail;
-    private Cactus cottontail2;
-    private Cactus cottontail3;
-    private Cactus cottontail4;
-    private Cactus vulture;
+    private Cactus[] cottontails;
+    private Cactus vulture; // declare an array of vulture (step 1)
 
     // Main method definition
     // This is the code that runs first and automatically
@@ -81,6 +79,7 @@ public class BasicGameApp implements Runnable {
     public BasicGameApp() {
 
         setUpGraphics();
+        canvas.addKeyListener(this);
 
         //variable and objects
         //create (construct) the objects needed for the game and load up
@@ -97,13 +96,19 @@ public class BasicGameApp implements Runnable {
         cacti4 = new Cactus(550, 550, 2, 4);
         cacti5 = new Cactus(725, 550, 2, 4);
         cacti6 = new Cactus(900, 550, 2, 4);
-        coyote = new Cactus(300, 350, 1, 4);
-        cottontail = new Cactus(50, 150, 3, 2);
-        cottontail2 = new Cactus(175, 150, 2, 3);
-        cottontail3 = new Cactus(300, 150, 4, 2);
-        cottontail4 = new Cactus(425, 150, 2, 5);
-        vulture = new Cactus(25, 25, 1, 0);
+        coyote = new Cactus(300, 350, 3, 1);
+        cottontails = new Cactus[5];
+        for (int y=0;y<cottontails.length;y++) {
+            cottontails[y] = new Cactus((int)(Math.random()*50) + 1,(int)(Math.random()*150) + 1,(int)(Math.random()*5) + 1,(int)(Math.random()*5) + 1);
+            cottontails[y].isAlive = false;
+        }
+        cottontails[0].isAlive = true;
+        vulture = new Cactus(25, 25, 1, 0); // construct the array to hold the vulture; it is empty (step 2)
+//        for(int x=0;x< vulture.length;x++) {
+//            vulture[x] = new Cactus(25*2*x, 25, 1, 0); // fill each slot (step 3)
+//        }
         won_screen = Toolkit.getDefaultToolkit().getImage("game_won.jpeg");
+        coyote.width = 100;
     }// BasicGameApp()
 
 
@@ -127,17 +132,39 @@ public class BasicGameApp implements Runnable {
 
     public void prey()
     {
-        if (cottontail.rec.intersects(coyote.rec)) {
-            cottontail.isAlive = false;
+        if (cottontails[0].rec.intersects(coyote.rec)) {
+            cottontails[0].isAlive = false;
         }
-        if (cottontail2.rec.intersects(coyote.rec)) {
-            cottontail2.isAlive = false;
+        if (cottontails[1].rec.intersects(coyote.rec)) {
+            cottontails[1].isAlive = false;
         }
-        if (cottontail3.rec.intersects(coyote.rec)) {
-            cottontail3.isAlive = false;
+        if (cottontails[2].rec.intersects(coyote.rec)) {
+            cottontails[2].isAlive = false;
         }
-        if (cottontail4.rec.intersects(coyote.rec)) {
-            cottontail4.isAlive = false;
+        if (cottontails[3].rec.intersects(coyote.rec)) {
+            cottontails[3].isAlive = false;
+        }
+        if (cottontails[4].rec.intersects(coyote.rec)) {
+            cottontails[4].isAlive = false;
+        }
+    }
+
+    public void reproduce()
+    {
+
+        System.out.println("cactus width: " + cacti.width + "height: " + cacti.height + "x : " +cacti.xpos + " y :");
+
+        if (cottontails[0].rec.intersects(cacti.rec)) {
+            cottontails[1].isAlive = true;
+        }
+        if (cottontails[1].rec.intersects(cacti.rec)) {
+            cottontails[2].isAlive = true;
+        }
+        if (cottontails[2].rec.intersects(cacti.rec)) {
+            cottontails[3].isAlive = true;
+        }
+        if (cottontails[3].rec.intersects(cacti.rec)) {
+            cottontails[4].isAlive = true;
         }
     }
 
@@ -145,16 +172,16 @@ public class BasicGameApp implements Runnable {
     {
         //calls the move( ) code in the objects
         coyote.bounce();
-        cottontail.bounce();
-        cottontail2.bounce();
-        cottontail3.bounce();
-        cottontail4.bounce();
+        for (int y=0;y< cottontails.length;y++) {
+            cottontails[y].bounce();
+        }
         vulture.wrap();
+        reproduce();
         prey();
         checkWin();
     }
     public void checkWin(){
-        if(cottontail.isAlive == false && cottontail2.isAlive == false && cottontail3.isAlive == false && cottontail4.isAlive == false){
+        if(cottontails[0].isAlive == false && cottontails[1].isAlive == false && cottontails[2].isAlive == false && cottontails[3].isAlive == false && cottontails[4].isAlive == false){
             winning = true;
         }
     }
@@ -184,6 +211,9 @@ public class BasicGameApp implements Runnable {
         canvas.setIgnoreRepaint(true);
 
         panel.add(canvas);  // adds the canvas to the panel.
+
+        canvas.addMouseListener(this);
+        canvas.addMouseMotionListener(this);
 
         // frame operations
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  //makes the frame close and exit nicely
@@ -222,25 +252,30 @@ public class BasicGameApp implements Runnable {
         g.draw(new Rectangle(cacti6.xpos, cacti2.ypos, 75, 150));
         g.drawImage(cactusPic, 900, 550, 75, 150, null);
         g.draw(new Rectangle(coyote.xpos, coyote.ypos, 100, 50));
-        g.drawImage(coyotePic, coyote.xpos, coyote.ypos, 100, 50, null);
-        if (cottontail.isAlive == true) {
-            g.draw(new Rectangle(cottontail.xpos, cottontail.ypos, cottontail.width, cottontail.height));
-            g.drawImage(cottontailPic, cottontail.xpos, cottontail.ypos, cottontail.width, cottontail.height, null);
+        g.drawImage(coyotePic, coyote.xpos, coyote.ypos, coyote.width, 50, null);
+        if (cottontails[0].isAlive == true) {
+            g.draw(new Rectangle(cottontails[0].xpos, cottontails[0].ypos, cottontails[0].width, cottontails[0].height));
+            g.drawImage(cottontailPic, cottontails[0].xpos, cottontails[0].ypos, cottontails[0].width, cottontails[0].height, null);
         }
-        if (cottontail2.isAlive == true) {
-            g.draw(new Rectangle(cottontail2.xpos, cottontail2.ypos, cottontail2.width, cottontail2.height));
-            g.drawImage(cottontailPic, cottontail2.xpos, cottontail2.ypos, cottontail2.width, cottontail2.height, null);
+        if (cottontails[1].isAlive == true) {
+            g.draw(new Rectangle(cottontails[1].xpos, cottontails[1].ypos, cottontails[1].width, cottontails[1].height));
+            g.drawImage(cottontailPic, cottontails[1].xpos, cottontails[1].ypos, cottontails[1].width, cottontails[1].height, null);
         }
-        if (cottontail3.isAlive == true) {
-            g.draw(new Rectangle(cottontail3.xpos, cottontail3.ypos, cottontail3.width, cottontail3.height));
-            g.drawImage(cottontailPic, cottontail3.xpos, cottontail3.ypos, cottontail3.width, cottontail3.height, null);
+        if (cottontails[2].isAlive == true) {
+            g.draw(new Rectangle(cottontails[2].xpos, cottontails[2].ypos, cottontails[2].width, cottontails[2].height));
+            g.drawImage(cottontailPic, cottontails[2].xpos, cottontails[2].ypos, cottontails[2].width, cottontails[2].height, null);
         }
-        if (cottontail4.isAlive == true) {
-            g.draw(new Rectangle(cottontail4.xpos, cottontail4.ypos, cottontail4.width, cottontail4.height));
-            g.drawImage(cottontailPic, cottontail4.xpos, cottontail4.ypos, cottontail4.width, cottontail4.height, null);
+        if (cottontails[3].isAlive == true) {
+            g.draw(new Rectangle(cottontails[3].xpos, cottontails[3].ypos, cottontails[3].width, cottontails[3].height));
+            g.drawImage(cottontailPic, cottontails[3].xpos, cottontails[3].ypos, cottontails[3].width, cottontails[3].height, null);
+        }
+        if (cottontails[4].isAlive == true) {
+            g.draw(new Rectangle(cottontails[4].xpos, cottontails[4].ypos, cottontails[4].width, cottontails[4].height));
+            g.drawImage(cottontailPic, cottontails[4].xpos, cottontails[4].ypos, cottontails[4].width, cottontails[4].height, null);
         }
         g.draw(new Rectangle(vulture.xpos, vulture.ypos, 75, 150));
-        g.drawImage(vulturePic, vulture.xpos, 25, 75, 150, null);
+        g.drawImage(vulturePic, vulture.xpos, vulture.ypos, 75, 150, null);
+
     }
         else{
             g.drawImage(won_screen, 0, 0, WIDTH, HEIGHT, null);
@@ -248,5 +283,75 @@ public class BasicGameApp implements Runnable {
         g.dispose();
 
         bufferStrategy.show();
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int code = e.getKeyCode();
+        System.out.println(code);
+
+        if(code == 83){
+            coyote.dy = Math.abs(coyote.dy);
+        }
+        if(code == 65){
+            coyote.dx = Math.abs(coyote.dx);
+        }
+        if(code == 87){
+            coyote.dy = -Math.abs(coyote.dy);
+        }
+        if(code == 55){
+            coyote.dx = -Math.abs(coyote.dx);
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        System.out.println(e.getX());
+        coyote.width = 2*coyote.width;
+        //coyote.ypos = e.getY();
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        System.out.println(e.getX());
+        coyote.width = 2*coyote.width;
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        System.out.println(e.getX());
+        coyote.width = 100;
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+//        System.out.println(e.getX());
+//        coyote.xpos = e.getX();
+//        coyote.ypos = e.getY();
     }
 }
