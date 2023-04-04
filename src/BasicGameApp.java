@@ -157,13 +157,13 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener, Mouse
         if (cottontails[0].rec.intersects(cacti.rec)) {
             cottontails[1].isAlive = true;
         }
-        if (cottontails[1].rec.intersects(cacti.rec)) {
+        if (cottontails[1].rec.intersects(cacti2.rec)) {
             cottontails[2].isAlive = true;
         }
-        if (cottontails[2].rec.intersects(cacti.rec)) {
+        if (cottontails[2].rec.intersects(cacti3.rec)) {
             cottontails[3].isAlive = true;
         }
-        if (cottontails[3].rec.intersects(cacti.rec)) {
+        if (cottontails[3].rec.intersects(cacti4.rec)) {
             cottontails[4].isAlive = true;
         }
     }
